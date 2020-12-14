@@ -1,22 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Post from "./Post";
+import { db } from "./firebase";
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      username: "danielle_bobb",
-      caption: " Catch me outside! How 'bout dat?!",
-      imageUrl:
-        "https://scontent-sea1-1.xx.fbcdn.net/v/t31.0-8/17388982_10212388059440447_5735740954338169843_o.jpg?_nc_cat=106&ccb=2&_nc_sid=a4a2d7&_nc_ohc=DbBQlmBG5HAAX9DF847&_nc_ht=scontent-sea1-1.xx&oh=0d1f8f2354409b242ea5cfe514a979ac&oe=5FFDED51",
-    },
-    {
-      username: "john_anderson",
-      caption: " I dipped but Danielle still loves me!",
-      imageUrl:
-        "https://media4.giphy.com/media/3o7ZeEZUzRjyvWuuIg/giphy.webp?cid=ecf05e470xdnt2qwi74ku1at3xigkokys63wxz9yc4tzp2go&rid=giphy.webp",
-    },
-  ]);
+  const [posts, setPosts] = useState([]);
+
+  // useEffect runs a piece of code based on a specific condition
+
+  useEffect(() => {
+    //this is where the code runs
+    db.collection("posts").onSnapshot((snapshot) => {
+      // every time a new post is added this code fires
+      setPosts(snapshot.docs.map((doc) => doc.data()));
+    });
+  }, []);
+  //the brackets mean only run this once then stop
 
   return (
     <div className="App">
